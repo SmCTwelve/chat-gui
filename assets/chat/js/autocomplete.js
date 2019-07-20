@@ -274,14 +274,22 @@ class ChatAutoComplete {
 
     promoteManyLastUsed(words) {
         for (let i = 0, l = words.length; i < l; i++) {
-            let word = words[i];
-            if (!word) continue;
-            const bucket = this.buckets.get(getBucketId(word));
-            if (!bucket) continue;
-            let candidate = bucket.get(word);
-            if (!candidate) continue;
-            candidate.lastUsed = Date.now();
-            bucket.set(word, candidate);
+            let origWord = words[i];
+            if (!origWord) continue;
+            const wordAndModifier = [
+                origWord.substring(0, origWord.lastIndexOf(':')),
+                origWord.substring(origWord.lastIndexOf(':'))
+            ];
+            for (let j = 0; j < wordAndModifier.length; j++) {
+                let word = wordAndModifier[j];
+                if (!word) continue;
+                const bucket = this.buckets.get(getBucketId(word));
+                if (!bucket) continue;
+                let candidate = bucket.get(word);
+                if (!candidate) continue;
+                candidate.lastUsed = Date.now();
+                bucket.set(word, candidate);
+            }
         }
         return words;
     }

@@ -23,30 +23,37 @@ function promoteIfSelected(ac) {
 function sortResults(a, b) {
     if (!a || !b) { return 0; }
 
+    let order;
+
     // order emotes second
-    if (a.isemote !== b.isemote) { return a.isemote && !b.isemote ? -1 : 1; }
+    if (a.isemote !== b.isemote) { order = a.isemote ? 1 : -1; }
 
     // order according to presence if has not been used yet
-    if (!(a.lastUsed || b.lastUsed) && (a.lastSeen !== b.lastSeen)) { return a.lastSeen > b.lastSeen ? -1 : 1; }
+    if (!(a.lastUsed || b.lastUsed) && (a.lastSeen !== b.lastSeen)) { order = a.lastSeen > b.lastSeen ? -1 : 1; }
 
     // order according to use third
-    if (a.lastUsed !== b.lastUsed) { return a.lastUsed > b.lastUsed ? -1 : 1; }
+    if (a.lastUsed !== b.lastUsed) { order = a.lastUsed > b.lastUsed ? -1 : 1; }
 
     // order by custom autocomplete order - see const.js
     for (var i in CUSTOM_AUTOCOMPLETE_ORDER) {
         if (CUSTOM_AUTOCOMPLETE_ORDER[i].includes(a.data) && CUSTOM_AUTOCOMPLETE_ORDER[i].includes(b.data)) {
-            return CUSTOM_AUTOCOMPLETE_ORDER[i].indexOf(a.data) < CUSTOM_AUTOCOMPLETE_ORDER[i].indexOf(b.data) ? -1 : 1;
+            order = CUSTOM_AUTOCOMPLETE_ORDER[i].indexOf(a.data) < CUSTOM_AUTOCOMPLETE_ORDER[i].indexOf(b.data) ? -1 : 1;
         }
     }
 
-    // order lexically fourth
-    a = a.data.toLowerCase();
-    b = b.data.toLowerCase();
+    // order lexically fourth if no other condition met
+    if (!order) {
+        a = a.data.toLowerCase();
+        b = b.data.toLowerCase();
 
-    if (a === b) { return 0; }
+        if (a === b) { return 0; }
 
-    return a > b ? 1 : -1;
+        return a > b ? 1 : -1;
+    }
+
+    return order;
 }
+
 function buildSearchCriteria(str, offset) {
     let pre = str.substring(0, offset);
 

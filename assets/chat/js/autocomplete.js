@@ -146,6 +146,7 @@ class ChatAutoComplete {
                 e.stopPropagation();
             } else if (shiftdown !== e.shiftKey && this.criteria !== null) {
                 shiftdown = !!e.shiftKey;
+                promoteIfSelected(this);
                 this.search(this.criteria, shiftdown);
             }
         });

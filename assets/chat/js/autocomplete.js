@@ -26,7 +26,7 @@ function sortResults(a, b) {
     let order;
 
     // order emotes second
-    if (a.isemote !== b.isemote) { order = a.isemote ? 1 : -1; }
+    if (a.isemote !== b.isemote) { order = a.isemote ? -1 : 1; }
 
     // order according to presence if has not been used yet
     if (!(a.lastUsed || b.lastUsed) && (a.lastSeen !== b.lastSeen)) { order = a.lastSeen > b.lastSeen ? -1 : 1; }
